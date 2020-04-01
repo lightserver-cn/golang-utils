@@ -14,10 +14,6 @@ const (
 	postgresUrl = "postgres://%v:%v@%v/%v?sslmode=disable"
 )
 
-type DB struct {
-	db *gorm.DB
-}
-
 type ConnectionOptions struct {
 	Adapter       string        `yaml:"adapter"`        // 适配器类型 mysql/postgres
 	Username      string        `yaml:"username"`       // 用户名
@@ -31,7 +27,6 @@ type ConnectionOptions struct {
 	SingularTable bool          `yaml:"singular_table"` // 表生成结尾不带s
 	Prefix        string        `yaml:"prefix"`         // 表前缀
 	EnableLog     bool          `yaml:"enable_log"`     // 启用Logger，显示详细日志
-	DropTable     bool          `yaml:"drop_table"`     // 初始化表结构
 }
 
 func NewDB(opts *ConnectionOptions) *gorm.DB {
@@ -65,20 +60,4 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 	fmt.Println("Connected to DB!")
 
 	return db
-}
-
-// drop tables 删除表
-func (DB *DB) DropTable(Models []interface{}) {
-	fmt.Println("Drop tables from DB.")
-	DB.db.DropTableIfExists(Models...)
-}
-
-// create tables 迁移表
-func (DB *DB) Migrate(Models []interface{}) {
-	// create tables
-	if err := DB.db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(Models...).Error; err != nil {
-		logrus.Errorf("Auto migrate tables failed: %s", err.Error())
-	}
-
-	fmt.Println("Create tables from DB.")
 }

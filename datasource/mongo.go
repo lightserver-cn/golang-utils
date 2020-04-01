@@ -10,10 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type MongoDatabase struct {
-	database *mongo.Database
-}
-
 type MongoOptions struct {
 	Addr       string        `json:"addr"`        // 地址
 	Port       string        `json:"port"`        // 端口

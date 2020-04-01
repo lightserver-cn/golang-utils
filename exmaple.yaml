@@ -1,5 +1,5 @@
 connection_options:
-  adapter: mysql        #
+  adapter: mysql        # 适配器
   username: ls          # 用户名
   password: ls          # 密码
   host: 10.0.1.201      # 地址
@@ -11,7 +11,6 @@ connection_options:
   singular_table: true  # 表生成结尾不带s
   prefix: ls_           # 表前缀
   enable_log: true      # 启用Logger，显示详细日志
-  drop_table: false     # 初始化表结构
 
 redis_options:                      #                                                default
   network:              tcp         # 网络类型 tcp 或者是 unix                         tpc

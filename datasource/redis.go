@@ -8,10 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type RedisClient struct {
-	client *redis.Client
-}
-
 type RedisOptions struct {
 	Network            string        `json:"network"`              // 网络类型 tcp 或者是 unix
 	Addr               string        `json:"addr"`                 // ip
