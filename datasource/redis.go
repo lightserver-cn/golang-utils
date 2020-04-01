@@ -8,6 +8,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var client *redis.Client
+
+// RedisOptions
 type RedisOptions struct {
 	Network            string        `json:"network"`              // 网络类型 tcp 或者是 unix
 	Addr               string        `json:"addr"`                 // ip
@@ -28,8 +31,9 @@ type RedisOptions struct {
 	IdleCheckFrequency time.Duration `json:"idle_check_frequency"` // 空闲连接收割器进行空闲检查的频率
 }
 
-func NewRedis(opts *RedisOptions) *redis.Client {
-	client := redis.NewClient(&redis.Options{
+// NewRedis
+func NewRedis(opts *RedisOptions) (client *redis.Client) {
+	client = redis.NewClient(&redis.Options{
 		Network:            opts.Network,
 		Addr:               opts.Addr + ":" + opts.Port,
 		Password:           opts.Password,
@@ -53,5 +57,15 @@ func NewRedis(opts *RedisOptions) *redis.Client {
 
 	fmt.Println("Connected to Redis!")
 
-	return client
+	return
+}
+
+// CloseRedis
+func CloseRedis() {
+	if client == nil {
+		return
+	}
+	if err := client.Close(); err != nil {
+		logrus.Errorf("Disconnect from Redis failed: %s", err.Error())
+	}
 }

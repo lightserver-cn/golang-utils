@@ -10,6 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var mongoClient *mongo.Client
+
+// MongoOptions
 type MongoOptions struct {
 	Addr       string        `json:"addr"`        // 地址
 	Port       string        `json:"port"`        // 端口
@@ -20,11 +23,14 @@ type MongoOptions struct {
 	AuthSource string        `json:"auth_source"` // 验证权限数据库
 }
 
+// NewMongo
 func NewMongo(opts *MongoOptions) *mongo.Database {
+	var err error
+
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	mongoClient, err := mongo.Connect(ctx, &options.ClientOptions{
+	mongoClient, err = mongo.Connect(ctx, &options.ClientOptions{
 		AppName: nil,
 		Auth: &options.Credential{
 			AuthMechanism:           "",
@@ -49,4 +55,15 @@ func NewMongo(opts *MongoOptions) *mongo.Database {
 	fmt.Println("Connected to MongoDB!")
 
 	return mongoClient.Database(opts.Database)
+}
+
+// CloseMongo
+func CloseMongo() {
+	if mongoClient == nil {
+		return
+	}
+	if err := mongoClient.Disconnect(context.Background()); nil != err {
+		logrus.Errorf("Disconnect from mongodb failed: %s", err.Error())
+	}
+
 }

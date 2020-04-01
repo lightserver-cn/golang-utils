@@ -14,6 +14,9 @@ const (
 	postgresUrl = "postgres://%v:%v@%v/%v?sslmode=disable"
 )
 
+var db *gorm.DB
+
+// ConnectionOptions
 type ConnectionOptions struct {
 	Adapter       string        `yaml:"adapter"`        // 适配器类型 mysql/postgres
 	Username      string        `yaml:"username"`       // 用户名
@@ -29,9 +32,11 @@ type ConnectionOptions struct {
 	EnableLog     bool          `yaml:"enable_log"`     // 启用Logger，显示详细日志
 }
 
+// NewDB
 func NewDB(opts *ConnectionOptions) *gorm.DB {
-
+	var err error
 	var url string
+
 	switch opts.Adapter {
 	default:
 		panic("not supported database adapter")
@@ -46,7 +51,7 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 		return opts.Prefix + defaultTableName
 	}
 
-	db, err := gorm.Open(opts.Adapter, url)
+	db, err = gorm.Open(opts.Adapter, url)
 	if err != nil {
 		logrus.Errorf("Opens DB failed: %s", err.Error())
 	}
@@ -60,4 +65,14 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 	fmt.Println("Connected to DB!")
 
 	return db
+}
+
+// CloseDB
+func CloseDB() {
+	if db == nil {
+		return
+	}
+	if err := db.Close(); nil != err {
+		logrus.Errorf("Disconnect from database failed: %s", err.Error())
+	}
 }
