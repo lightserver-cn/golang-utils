@@ -15,13 +15,13 @@ type MongoDatabase struct {
 }
 
 type MongoOptions struct {
-	Addr       string         `json:"addr"`
-	Port       string         `json:"port"`
-	Username   string         `json:"username"`
-	Password   string         `json:"password"`
-	Database   string         `json:"database"`
-	TimeOut    *time.Duration `json:"time_out"`
-	AuthSource string         `json:"auth_source"`
+	Addr       string        `json:"addr"`        // 地址
+	Port       string        `json:"port"`        // 端口
+	Username   string        `json:"username"`    // 用户名
+	Password   string        `json:"password"`    // 密码
+	Database   string        `json:"database"`    // 数据库
+	TimeOut    time.Duration `json:"time_out"`    // 过期时间 int64 ns * 1000 * 1000 = s
+	AuthSource string        `json:"auth_source"` // 验证权限数据库
 }
 
 func NewMongo(opts *MongoOptions) *mongo.Database {
@@ -38,7 +38,7 @@ func NewMongo(opts *MongoOptions) *mongo.Database {
 			Password:                opts.Password,
 			PasswordSet:             true,
 		},
-		ConnectTimeout: opts.TimeOut,
+		ConnectTimeout: &opts.TimeOut,
 		Hosts:          []string{opts.Addr + ":" + opts.Port},
 	})
 

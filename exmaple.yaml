@@ -1,0 +1,42 @@
+connection_options:
+  adapter: mysql        #
+  username: ls          # 用户名
+  password: ls          # 密码
+  host: 10.0.1.201      # 地址
+  port: 3306            # 端口
+  database: ls_users    # 数据库
+  max_idle_conns: 20    # 设置连接池中的最大闲置连接数
+  max_open_conns: 2000  # 设置数据库的最大连接数量
+  max_lifetime: 1s      # 设置连接的最大可复用时间
+  singular_table: true  # 表生成结尾不带s
+  prefix: ls_           # 表前缀
+  enable_log: true      # 启用Logger，显示详细日志
+  drop_table: false     # 初始化表结构
+
+redis_options:                      #                                                default
+  network:              tcp         # 网络类型 tcp 或者是 unix                         tpc
+  addr:                 10.0.1.202  # ip
+  port:                 6379        # 端口
+  password:             ""          # 密码
+  db:                   10          # 数据库
+  maxretries:           0           # 放弃连接前的最大重试次数                           不重试失败的命名
+  minretrybackoff:      8000000     # 每次重试直接的最小回退                             8毫秒；-1禁止后退
+  maxretrybackoff:      512000000   # 每次重试直接的最大回退                             默认值为512毫秒；-1禁止后退
+  dialtimeout:          5000000000  # 建立新连接的拨号超时                               5秒
+  readtimeout:          0           # 套接字读取超时。如果达到，命令将失败，超时而不是阻塞    -1表示无超时，0表示默认值。默认值为3秒
+  writetimeout:         0           # 套接字写入超时。如果达到，命令将失败，超时而不是阻塞    默认值为 readTimeout
+  poolsize:             20          # 套接字连接的最大数目                               套接字连接的最大数目
+  minidleconns:         0           # 最小空闲连接数，新连接是慢的
+  maxconnage:           0           # 客户端退出（关闭）连接的连接期限                     默认为不关闭过期的连接
+  pooltimeout:          0           # 在返回错误之前，所有连接正忙，等待的时间              默认是ReadTimeout + 1s
+  idletimeout:          0           # 客户端关闭空闲连接的时间。应该小雨服务器的超时         默认为1分钟。-1禁用空闲连接收割器，但如果设置了idleTimeout客户端仍放弃空闲连接。
+  idlecheckfrequency:   0           # 空闲连接收割器进行空闲检查的频率
+
+mongo_options:
+  addr: 10.0.1.203      # 地址
+  port: 27017           # 端口
+  username: ls          # 用户名
+  password: ls          # 密码
+  database: ls_users    # 数据库
+  timeout: 5000000      # 过期时间 ns * 1000 * 1000 = s
+  authsource: ls_users  # 验证权限数据库

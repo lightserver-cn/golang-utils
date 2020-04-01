@@ -1,5 +1,7 @@
 package response
 
+import "github.com/lightserver-cn/golang-utils/sql"
+
 type JsonResponse struct {
 	ErrorCode int         `json:"error_code"`
 	Message   string      `json:"message"`
@@ -23,6 +25,13 @@ func JsonData(data interface{}) *JsonResponse {
 		Success:   true,
 		Message:   "success",
 	}
+}
+
+func JsonPageResult(result interface{}, page *sql.Pages) *JsonResponse {
+	return JsonData(&sql.PageResult{
+		Page:   page,
+		Result: result,
+	})
 }
 
 func JsonSuccess() *JsonResponse {
