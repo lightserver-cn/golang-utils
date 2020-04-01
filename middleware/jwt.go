@@ -15,7 +15,7 @@ import (
 // 过期时间，默认 10 小时
 const expireTime = 10 * time.Hour * time.Duration(1)
 
-type claims struct {
+type Claims struct {
 	uid uint64 `json:"uid"` // 用户id
 	nik string `json:"nik"` // 用户昵称
 	iss string `json:"iss"` // jwt签发者
@@ -28,7 +28,7 @@ type claims struct {
 }
 
 // GenerateToken 创建 token
-func GenerateToken(jwtKey string, claims *claims) string {
+func GenerateToken(jwtKey string, claims *Claims) string {
 	// 设置过期时间，默认 10 小时
 	if claims.exp == 0 {
 		claims.exp = time.Now().Add(expireTime).Unix()
@@ -50,7 +50,11 @@ func GenerateToken(jwtKey string, claims *claims) string {
 		"jti": claims.jti,
 	})
 
-	tokenString, _ := token.SignedString([]byte(jwtKey))
+	tokenString, err := token.SignedString([]byte(jwtKey))
+	if err != nil {
+		logrus.Errorf("token SignedString failure :", err.Error())
+	}
+
 	return tokenString
 }
 
@@ -100,12 +104,13 @@ func GetToken(ctx iris.Context) string {
 }
 
 // 获取登陆 uid
-func GetUserID(token, jwtKey string) (id uint64) {
+func GetUserID(token, jwtKey string) uint64 {
+	var uid uint64
 	if token != "" && token != "undefined" && len(token) > 7 {
 		v, _ := ParseToken(token, jwtKey)
 		if v != "" {
 			return uint64(cast.ToInt(v.(jwt.MapClaims)["uid"]))
 		}
 	}
-	return
+	return uid
 }
