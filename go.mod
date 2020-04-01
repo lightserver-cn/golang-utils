@@ -1,4 +1,4 @@
-module github.com/golang-utils
+module github.com/lightserver-cn/golang-utils
 
 go 1.14
 
