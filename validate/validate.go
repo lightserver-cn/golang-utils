@@ -22,5 +22,6 @@ func Validate(v interface{}) (errMaps map[string]string) {
 			}
 		}
 	}
+
 	return errMaps
 }

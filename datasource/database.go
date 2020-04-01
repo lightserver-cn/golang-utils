@@ -46,6 +46,7 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 		url = fmt.Sprintf(postgresUrl, opts.Username, opts.Password, opts.Host, opts.Database)
 	}
 
+	// 设置默认表名前缀
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return opts.Prefix + defaultTableName
 	}
@@ -66,13 +67,13 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 	return db
 }
 
-// drop tables
+// drop tables 删除表
 func (DB *DB) DropTable(Models []interface{}) {
 	fmt.Println("Drop tables from DB.")
 	DB.db.DropTableIfExists(Models...)
 }
 
-// create tables
+// create tables 迁移表
 func (DB *DB) Migrate(Models []interface{}) {
 	// create tables
 	if err := DB.db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(Models...).Error; err != nil {

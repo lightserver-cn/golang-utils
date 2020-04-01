@@ -24,11 +24,27 @@ type OrderParams struct {
 	Asc    bool
 }
 
+func NewBuilder(selectColumns ...string) *Builder {
+	s := &Builder{}
+	if len(selectColumns) > 0 {
+		s.SelectColumns = append(s.SelectColumns, selectColumns...)
+	}
+	return s
+}
+
 func (b *Builder) DB(db *gorm.DB) *Builder {
 	b.Db = db
 	return b
 }
 
+// where(" = ?", args)
+// where(" <> ?", args)
+// where(" > ?", args)
+// where(" >= ?", args)
+// where(" < ?", args)
+// where(" <= ?", args)
+// where(" in (?)", args)
+// where(" LIKE ?", args)
 func (b *Builder) Where(query string, args ...interface{}) *Builder {
 	b.WhereParams = append(b.WhereParams, WhereParams{
 		Query: query,

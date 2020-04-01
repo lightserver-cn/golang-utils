@@ -1,6 +1,8 @@
 package response
 
-import "github.com/lightserver-cn/golang-utils/sql"
+import (
+	"github.com/lightserver-cn/golang-utils/sql"
+)
 
 type JsonResponse struct {
 	ErrorCode int         `json:"error_code"`
