@@ -9,6 +9,7 @@ import (
 
 var validate *validator.Validate
 
+// 验证
 func Validate(v interface{}) (errMaps map[string]string) {
 	trans, _ := ut.New(zh.New()).GetTranslator("zh")
 	validate = validator.New()

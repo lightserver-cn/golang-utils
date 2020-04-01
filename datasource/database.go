@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	mysqlUrl    = "%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local"
-	postgresUrl = "postgres://%v:%v@%v/%v?sslmode=disable"
+	// mysql 连接
+	mysqlUrl = "%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local"
+	// PostGreSQL 连接
+	postGreSqlUrl = "postgres://%v:%v@%v/%v?sslmode=disable"
 )
 
 var db *gorm.DB
@@ -43,7 +45,7 @@ func NewDB(opts *ConnectionOptions) *gorm.DB {
 	case "mysql":
 		url = fmt.Sprintf(mysqlUrl, opts.Username, opts.Password, opts.Host, opts.Port, opts.Database)
 	case "postgres":
-		url = fmt.Sprintf(postgresUrl, opts.Username, opts.Password, opts.Host, opts.Database)
+		url = fmt.Sprintf(postGreSqlUrl, opts.Username, opts.Password, opts.Host, opts.Database)
 	}
 
 	// 设置默认表名前缀
