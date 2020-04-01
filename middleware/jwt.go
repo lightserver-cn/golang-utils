@@ -15,39 +15,39 @@ import (
 // 过期时间，默认 10 小时
 const expireTime = 10 * time.Hour * time.Duration(1)
 
-type Claims struct {
-	uid uint64 `json:"uid"` // 用户id
-	nik string `json:"nik"` // 用户昵称
-	iss string `json:"iss"` // jwt签发者
-	sub string `json:"sub"` // jwt所面向的用户
-	aud string `json:"aud"` // 接收jwt的一方
-	exp int64  `json:"exp"` // jwt 的过期时间，这个过期时间必须要大于签发时间
-	nbf string `json:"nbf"` // 定义在什么时间之前，该jwt都是不可用的
-	lat int64  `json:"lat"` // jwt 的签发时间
-	jti string `json:"jti"` // jwt 的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
+type MyClaims struct {
+	Uid       uint64 `json:"uid"`           // 用户 uid
+	NikeName  string `json:"nik"`           // 用户昵称
+	Audience  string `json:"aud,omitempty"` // 接收 jwt 的一方
+	ExpiresAt int64  `json:"exp,omitempty"` // jwt 的过期时间，这个过期时间必须要大于签发时间
+	Id        string `json:"jti,omitempty"` // jwt 的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
+	IssuedAt  int64  `json:"iat,omitempty"` // jwt 的签发时间
+	Issuer    string `json:"iss,omitempty"` // jwt 签发者
+	NotBefore int64  `json:"nbf,omitempty"` // 定义在什么时间之前，该 jwt 都是不可用的
+	Subject   string `json:"sub,omitempty"` // jwt 所面向的用户
 }
 
 // GenerateToken 创建 token
-func GenerateToken(jwtKey string, claims *Claims) string {
+func GenerateToken(jwtKey string, claims *MyClaims) string {
 	// 设置过期时间，默认 10 小时
-	if claims.exp == 0 {
-		claims.exp = time.Now().Add(expireTime).Unix()
+	if claims.ExpiresAt == 0 {
+		claims.ExpiresAt = time.Now().Add(expireTime).Unix()
 	}
 	// 设置签发时间
-	if claims.lat == 0 {
-		claims.lat = time.Now().Unix()
+	if claims.IssuedAt == 0 {
+		claims.IssuedAt = time.Now().Unix()
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"uid": claims.uid,
-		"nik": claims.nik,
-		"iss": claims.iss,
-		"sub": claims.sub,
-		"aud": claims.aud,
-		"exp": claims.exp,
-		"nbf": claims.nbf,
-		"iat": claims.lat,
-		"jti": claims.jti,
+		"uid": claims.Uid,
+		"nik": claims.NikeName,
+		"iss": claims.Issuer,
+		"aud": claims.Audience,
+		"exp": claims.ExpiresAt,
+		"jti": claims.Id,
+		"iat": claims.IssuedAt,
+		"nbf": claims.NotBefore,
+		"sub": claims.Subject,
 	})
 
 	tokenString, err := token.SignedString([]byte(jwtKey))
