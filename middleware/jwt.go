@@ -11,12 +11,10 @@ import (
 	"github.com/spf13/cast"
 )
 
-const JwtKey = "ls"
-
-func GenerateJwtMiddleware() *jwtMiddleware.Middleware {
+func GenerateJwtMiddleware(jwtKey string) *jwtMiddleware.Middleware {
 	return jwtMiddleware.New(jwtMiddleware.Config{
 		ValidationKeyGetter: func(token *jwt.Token) (i interface{}, err error) {
-			return []byte(JwtKey), nil
+			return []byte(jwtKey), nil
 		},
 		ContextKey: "",
 		ErrorHandler: func(ctx iris.Context, err error) {
@@ -55,11 +53,11 @@ func GetToken(ctx iris.Context) string {
 	return token
 }
 
-func GetUserID(token string) (id uint64) {
+func GetUserID(token, jwtKey string) (id uint64) {
 	if token != "" && token != "undefined" && len(token) > 7 {
-		v, _ := ParseToken(token, JwtKey)
+		v, _ := ParseToken(token, jwtKey)
 		if v != "" {
-			id = uint64(cast.ToInt(v.(jwt.MapClaims)["id"]))
+			return uint64(cast.ToInt(v.(jwt.MapClaims)["id"]))
 		}
 	}
 	return
