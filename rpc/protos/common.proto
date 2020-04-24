@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package rpc;
+
+option go_package = ".;pbs";
+
+import "google/protobuf/any.proto";
+
+message Pk {
+  // @inject_tag: json:"id",form:"id"
+  uint64 Id = 1;
+}
+
+message Pages {
+  // @inject_tag: json:"page",form:"page"
+  uint32 Page = 1;
+  // @inject_tag: json:"per_page",form:"per_page"
+  uint32 PerPage = 2;
+  // @inject_tag: json:"total",form:"total"
+  uint32 Total = 3;
+}
+
+message Response {
+  // @inject_tag: json:"code",form:"code"
+  uint32 Code = 1;
+  // @inject_tag: json:"msg",form:"msg"
+  string Msg = 2;
+  // @inject_tag: json:"data",form:"data"
+  google.protobuf.Any data = 3;
+}

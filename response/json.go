@@ -5,27 +5,24 @@ import (
 )
 
 type JsonResponse struct {
-	ErrorCode int         `json:"error_code"`
-	Message   string      `json:"message"`
-	Data      interface{} `json:"data"`
-	Success   bool        `json:"success"`
+	Code uint32      `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
-func Json(errorCode int, message string, data interface{}, success bool) *JsonResponse {
+func Json(code uint32, msg string, data interface{}, success bool) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: errorCode,
-		Message:   message,
-		Data:      data,
-		Success:   success,
+		Code: code,
+		Msg:  msg,
+		Data: data,
 	}
 }
 
 func JsonData(data interface{}) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: 0,
-		Data:      data,
-		Success:   true,
-		Message:   "success",
+		Code: 0,
+		Msg:  "success",
+		Data: data,
 	}
 }
 
@@ -38,46 +35,41 @@ func JsonPageResult(result interface{}, page *sql.Pages) *JsonResponse {
 
 func JsonSuccess() *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: 0,
-		Message:   "success",
-		Data:      nil,
-		Success:   true,
+		Code: 0,
+		Msg:  "success",
+		Data: nil,
 	}
 }
 
-func JsonErrorCode(code int) *JsonResponse {
+func JsonErrorCode(code uint32) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: code,
-		Message:   "failure",
-		Data:      nil,
-		Success:   false,
+		Code: code,
+		Msg:  "failure",
+		Data: nil,
 	}
 }
 
 func JsonErrorMsg(message string) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: 0,
-		Message:   message,
-		Data:      nil,
-		Success:   false,
+		Code: 400,
+		Msg:  message,
+		Data: nil,
 	}
 }
 
-func JsonErrorCodeMsg(code int, message string) *JsonResponse {
+func JsonErrorCodeMsg(code uint32, msg string) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: code,
-		Message:   message,
-		Data:      nil,
-		Success:   false,
+		Code: code,
+		Msg:  msg,
+		Data: nil,
 	}
 }
 
-func JsonErrorData(code int, message string, data interface{}) *JsonResponse {
+func JsonErrorData(code uint32, msg string, data interface{}) *JsonResponse {
 	return &JsonResponse{
-		ErrorCode: code,
-		Message:   message,
-		Data:      data,
-		Success:   false,
+		Code: code,
+		Msg:  msg,
+		Data: data,
 	}
 }
 

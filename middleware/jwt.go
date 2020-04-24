@@ -20,7 +20,7 @@ type MyClaims struct {
 	NikeName  string `json:"nik"`           // 用户昵称
 	Audience  string `json:"aud,omitempty"` // 接收 jwt 的一方
 	ExpiresAt int64  `json:"exp,omitempty"` // jwt 的过期时间，这个过期时间必须要大于签发时间
-	Id        string `json:"jti,omitempty"` // jwt 的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
+	Jti       string `json:"jti,omitempty"` // jwt 的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
 	IssuedAt  int64  `json:"iat,omitempty"` // jwt 的签发时间
 	Issuer    string `json:"iss,omitempty"` // jwt 签发者
 	NotBefore int64  `json:"nbf,omitempty"` // 定义在什么时间之前，该 jwt 都是不可用的
@@ -44,7 +44,7 @@ func GenerateToken(jwtKey string, claims *MyClaims) string {
 		"iss": claims.Issuer,
 		"aud": claims.Audience,
 		"exp": claims.ExpiresAt,
-		"jti": claims.Id,
+		"jti": claims.Jti,
 		"iat": claims.IssuedAt,
 		"nbf": claims.NotBefore,
 		"sub": claims.Subject,
@@ -67,10 +67,9 @@ func GenerateJwtMiddleware(jwtKey string) *jwtMiddleware.Middleware {
 		ContextKey: "",
 		ErrorHandler: func(ctx iris.Context, err error) {
 			if _, err = ctx.JSON(response.JsonResponse{
-				ErrorCode: -1,
-				Message:   "认证失败，请重新登录认证",
-				Data:      nil,
-				Success:   false,
+				Code: 401,
+				Msg:  "认证失败，请重新登录认证",
+				Data: nil,
 			}); err != nil {
 				logrus.Error(err)
 			}

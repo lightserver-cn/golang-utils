@@ -1,7 +1,8 @@
 package util
 
 import (
-	"fmt"
+	"log"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -9,12 +10,12 @@ import (
 func EncodePassword(password string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 	return string(hash)
 }
 
 // 解密字符串
-func ValidatePassword(encodePassword, inputPassword string) error {
-	return bcrypt.CompareHashAndPassword([]byte(encodePassword), []byte(inputPassword))
+func ValidatePassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
